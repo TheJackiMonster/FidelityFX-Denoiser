@@ -86,17 +86,15 @@ void FFX_DNSR_Reflections_InitializeGroupSharedMemory(int2 dispatch_thread_id, i
 }
 
 min16float FFX_DNSR_Reflections_GetEdgeStoppingNormalWeight(min16float3 normal_p, min16float3 normal_q) {
-    return pow(max(dot(normal_p, normal_q), 0.0), FFX_DNSR_REFLECTIONS_PREFILTER_NORMAL_SIGMA);
+    return min16float(pow(max(dot(normal_p, normal_q), 0.0), FFX_DNSR_REFLECTIONS_PREFILTER_NORMAL_SIGMA));
 }
 
 min16float FFX_DNSR_Reflections_GetEdgeStoppingDepthWeight(float center_depth, float neighbor_depth) {
-    return exp(-abs(center_depth - neighbor_depth) * center_depth * FFX_DNSR_REFLECTIONS_PREFILTER_DEPTH_SIGMA);
+    return min16float(exp(-abs(center_depth - neighbor_depth) * center_depth * FFX_DNSR_REFLECTIONS_PREFILTER_DEPTH_SIGMA));
 }
 
 min16float FFX_DNSR_Reflections_GetRadianceWeight(min16float3 center_radiance, min16float3 neighbor_radiance, min16float variance) {
-    return max(exp(-(FFX_DNSR_REFLECTIONS_RADIANCE_WEIGHT_BIAS + variance * FFX_DNSR_REFLECTIONS_RADIANCE_WEIGHT_VARIANCE_K)
-                    * length(center_radiance - neighbor_radiance.xyz))
-            , 1.0e-2);
+    return min16float(max(exp(-(FFX_DNSR_REFLECTIONS_RADIANCE_WEIGHT_BIAS + variance * FFX_DNSR_REFLECTIONS_RADIANCE_WEIGHT_VARIANCE_K) * length(center_radiance - neighbor_radiance.xyz)), 1.0e-2));
 }
 
 void FFX_DNSR_Reflections_Resolve(int2 group_thread_id, min16float3 avg_radiance, FFX_DNSR_Reflections_NeighborhoodSample center,
