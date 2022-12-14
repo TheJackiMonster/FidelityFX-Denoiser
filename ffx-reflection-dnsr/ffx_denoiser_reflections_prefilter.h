@@ -108,9 +108,9 @@ void FFX_DNSR_Reflections_Resolve(int2 group_thread_id, min16float3 avg_radiance
     const uint sample_count     = 15;
     const int2 sample_offsets[] = {int2(0, 1),  int2(-2, 1),  int2(2, -3), int2(-3, 0),  int2(1, 2), int2(-1, -2), int2(3, 0), int2(-3, 3),
                                    int2(0, -3), int2(-1, -1), int2(2, 1),  int2(-2, -2), int2(1, 0), int2(0, 2),   int2(3, -1)};
-    min16float variance_weight = max(FFX_DNSR_REFLECTIONS_PREFILTER_VARIANCE_BIAS,
-                                     1.0 - exp(-(center.variance * FFX_DNSR_REFLECTIONS_PREFILTER_VARIANCE_WEIGHT))
-                                    );
+    min16float variance_weight = min16float(
+			max(FFX_DNSR_REFLECTIONS_PREFILTER_VARIANCE_BIAS, 1.0 - exp(-(center.variance * FFX_DNSR_REFLECTIONS_PREFILTER_VARIANCE_WEIGHT)))
+    );
     for (int i = 0; i < sample_count; ++i) {
         int2                                    new_idx  = group_thread_id + sample_offsets[i];
         FFX_DNSR_Reflections_NeighborhoodSample neighbor = FFX_DNSR_Reflections_LoadFromGroupSharedMemory(new_idx);
