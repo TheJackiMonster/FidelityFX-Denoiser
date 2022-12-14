@@ -115,7 +115,7 @@ void FFX_DNSR_Reflections_Resolve(int2 group_thread_id, min16float3 avg_radiance
         int2                                    new_idx  = group_thread_id + sample_offsets[i];
         FFX_DNSR_Reflections_NeighborhoodSample neighbor = FFX_DNSR_Reflections_LoadFromGroupSharedMemory(new_idx);
 
-        min16float weight = 1.0;
+        min16float weight = min16float(1.0);
         weight *= FFX_DNSR_Reflections_GetEdgeStoppingNormalWeight(float3(center.normal), float3(neighbor.normal));
         weight *= FFX_DNSR_Reflections_GetEdgeStoppingDepthWeight(center.depth, neighbor.depth);
         weight *= FFX_DNSR_Reflections_GetRadianceWeight(avg_radiance, neighbor.radiance.xyz, center.variance);
