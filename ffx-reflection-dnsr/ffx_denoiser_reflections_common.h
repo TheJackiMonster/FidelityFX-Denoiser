@@ -130,9 +130,9 @@ min16float3 FFX_DNSR_Reflections_ClipAABB(min16float3 aabb_min, min16float3 aabb
 	);
 
     if (max_abs_unit > 1.0) {
-        return aabb_center + color_vector / max_abs_unit; // clip towards color vector
+        return min16float3(aabb_center + color_vector / max_abs_unit); // clip towards color vector
     } else {
-        return prev_sample; // point is inside aabb
+        return min16float3(prev_sample); // point is inside aabb
     }
 }
 
