@@ -50,7 +50,9 @@ uint2 FFX_DNSR_Reflections_RemapLane8x8(uint lane) {
                  FFX_DNSR_Reflections_BitfieldInsert(FFX_DNSR_Reflections_BitfieldExtract(lane, 3u, 3u), FFX_DNSR_Reflections_BitfieldExtract(lane, 1u, 2u), 2u));
 }
 
-min16float FFX_DNSR_Reflections_Luminance(min16float3 color) { return max(dot(color, float3(0.299, 0.587, 0.114)), 0.001); }
+min16float FFX_DNSR_Reflections_Luminance(min16float3 color) {
+	return min16float(max(dot(color, float3(0.299, 0.587, 0.114)), 0.001));
+}
 
 min16float FFX_DNSR_Reflections_ComputeTemporalVariance(min16float3 history_radiance, min16float3 radiance) {
     min16float history_luminance = FFX_DNSR_Reflections_Luminance(history_radiance);
