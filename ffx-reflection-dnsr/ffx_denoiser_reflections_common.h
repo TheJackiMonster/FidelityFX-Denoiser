@@ -57,7 +57,11 @@ min16float FFX_DNSR_Reflections_Luminance(min16float3 color) {
 min16float FFX_DNSR_Reflections_ComputeTemporalVariance(min16float3 history_radiance, min16float3 radiance) {
     min16float history_luminance = FFX_DNSR_Reflections_Luminance(history_radiance);
     min16float luminance         = FFX_DNSR_Reflections_Luminance(radiance);
-    min16float diff              = abs(history_luminance - luminance) / max(max(history_luminance, luminance), 0.5);
+    
+	min16float diff              = min16float(
+			abs(history_luminance - luminance) / max(max(history_luminance, luminance), 0.5)
+	);
+
     return diff * diff;
 }
 
@@ -120,7 +124,10 @@ min16float3 FFX_DNSR_Reflections_ClipAABB(min16float3 aabb_min, min16float3 aabb
     float3 color_vector_clip = color_vector / extent_clip;
     // Find max absolute component
     color_vector_clip       = abs(color_vector_clip);
-    min16float max_abs_unit = max(max(color_vector_clip.x, color_vector_clip.y), color_vector_clip.z);
+    
+	min16float max_abs_unit = min16float(
+			max(max(color_vector_clip.x, color_vector_clip.y), color_vector_clip.z)
+	);
 
     if (max_abs_unit > 1.0) {
         return aabb_center + color_vector / max_abs_unit; // clip towards color vector
