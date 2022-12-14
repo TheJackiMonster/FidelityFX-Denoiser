@@ -44,8 +44,8 @@ uint FFX_DNSR_Shadows_GetBitMaskFromPixelPosition(uint2 pixel_pos)
     return (1u << lane_index);
 }
 
-#define TILE_META_DATA_CLEAR_MASK 0b01u
-#define TILE_META_DATA_LIGHT_MASK 0b10u
+#define TILE_META_DATA_CLEAR_MASK 1
+#define TILE_META_DATA_LIGHT_MASK 2
 
 // From ffx_a.h
 
